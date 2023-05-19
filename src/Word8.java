@@ -10,8 +10,6 @@ public class Word8 {
                 throw new CpuException("please enter a word of 0 and 1 only");
         }
         this.wr=wr;
-
-
     }
 
 

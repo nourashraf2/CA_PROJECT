@@ -26,6 +26,18 @@ public class SREG {
 
     }
 
+    public void setV(byte data1, byte data2, byte result, char operator) {
+    /*
+     * If 2 numbers are added, and they both have the same sign (both positive or both
+negative), then overflow occurs (V = 1) if and only if the result has the opposite
+sign. Overflow never occurs when adding operands with different signs.
+
+· If 2 numbers are subtracted, and their signs are different, then overflow occurs (V
+= 1) if and only if the result has the same sign as the subtrahend.
+
+     */
+    }
+
 
 
 }
