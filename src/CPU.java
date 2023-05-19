@@ -69,14 +69,15 @@ public class CPU {
       switch (opcode) {
          case 0: // ADD
             result = (byte) (data1 + data2);
-            sreg.setV(data1, data2, result, '+');
+            sreg.updateSREG(data1, data2, result, '+');
             break;
          case 1: // SUBTRACT
             result = (byte) (data1 - data2);
-            sreg.setV(data1, data2, result, '-');
+            sreg.updateSREG(data1, data2, result, '-');
             break;
          case 2: // MULTIPLY
             result = (byte) (data1 * data2);
+            sreg.updateSREG(data1, data2, result, '*');
             break;
          case 3: // LOAD IMM
             result = data2;
@@ -89,18 +90,22 @@ public class CPU {
             break;
          case 5: // AND
             result = (byte) (data1 & data2);
+            sreg.updateSREG(data1, data2, result, '&');
             break;
          case 6: // OR
             result = (byte) (data1 | data2);
+            sreg.updateSREG(data1, data2, result, '|');
             break;
          case 7: // JUMP
             pc = concatenateByte(data1, data2);
             return;
          case 8: // CIRC LEFT
             result = (byte) Integer.rotateLeft(data1, data2);
+            sreg.updateSREG(data1, data2, result, '<');
             break;
          case 9: // CIRC RIGHT
             result = (byte) Integer.rotateRight(data1, data2);
+            sreg.updateSREG(data1, data2, result, '>');
             break;
          case 10: // LOAD BYTE
             result = dataMemory[data2];
@@ -116,15 +121,9 @@ public class CPU {
 
    }
 
-   private byte concatenateByte(byte data1, byte data2) {
-      return 0;
-   }
-
-   public void setCarry() {
-
-   }
-
-   // Execute
+   // private byte concatenateByte(byte data1, byte data2) {
+   // return 0;
+   // }
 
    public void run(int clockCycles) {
       for (int i = 0; i < clockCycles; i++) {
