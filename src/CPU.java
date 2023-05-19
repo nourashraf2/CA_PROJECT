@@ -159,9 +159,11 @@ public class CPU {
       return temp1;
    }
 
-   public void run(int clockCycles) throws CpuException {
-      for (int i = 0; i < clockCycles; i++) {
-         System.out.println("clock cycle: " + i);
+   public void run() throws CpuException {
+      int clockCycles = 0;
+      System.out.println("\n\n------------------------------------------\n");
+      for (int i = 0; i < 3 + ((instructionMemory.actualSize - 1) * 1); i++) {
+         System.out.println("clock cycle: " + clockCycles);
          int j = tryExecute();
          if (j != -1) {
             i = j;
@@ -169,10 +171,13 @@ public class CPU {
          decoded = tryDecode();
          fetched = tryFetch();
          System.out.println("\n------------------------------------------\n");
+         clockCycles++;
       }
 
+      System.out.println("\n");
+
       for (int i = 0; i < registerFile.length; i++) {
-         System.out.println("Register " + i + " = " + registerFile[i]);
+      System.out.println("Register " + i + " = " + registerFile[i]);
       }
 
       displayMemory();
@@ -214,8 +219,7 @@ public class CPU {
       try {
          CPU cpu = new CPU();
          cpu.instructionMemory.loadMemory("instructions.txt");
-         cpu.run(19);
-         System.out.println(cpu.dataMemory[60]);
+         cpu.run();
       } catch (CpuException e) {
          System.out.println(e.getMessage());
       } catch (IOException e) {

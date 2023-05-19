@@ -2,6 +2,7 @@ import java.io.*;
 
 public class InstructionMemory {
     private Word16[] block;
+    int actualSize;
 
     public InstructionMemory() throws CpuException {
         this.block = new Word16[1024];
@@ -32,6 +33,8 @@ public class InstructionMemory {
         String line;
         int counter = 0;
         while ((line = bufferedReader.readLine()) != null) {
+
+            actualSize++;
 
             String[] instruction = line.split(" ");
             String binaryInstruction = "";
@@ -74,7 +77,6 @@ public class InstructionMemory {
                     break;
                 default:
                     throw new CpuException();
-
             }
 
             block[counter] = new Word16(binaryInstruction);
