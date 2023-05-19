@@ -102,6 +102,9 @@ public class CPU {
                // jump = true;
                fetched = null;
                decoded = null;
+               if (pc + data2 < 0) {
+                  throw new CpuException("\n\n\n\nPC IS SMALLER THAN 0");
+               }
                pc += data2;
                System.out.println("pc new value: " + pc);
             }
