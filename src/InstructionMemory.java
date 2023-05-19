@@ -49,7 +49,7 @@ public class InstructionMemory {
                     binaryInstruction = "0011" + registerEncode(instruction[1]) + intEncode(instruction[2]);
                     break;
                 case ("BEQZ"):
-                    binaryInstruction = "0100" + registerEncode(instruction[1]) + intEncode(instruction[2]);
+                    binaryInstruction = "0100" + registerEncode(instruction[1]) + intEncode(instruction[2], "");
                     break;
                 case ("AND"):
                     binaryInstruction = "0101" + registerEncode(instruction[1]) + registerEncode(instruction[2]);
