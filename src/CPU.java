@@ -1,13 +1,17 @@
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.xml.crypto.Data;
 
 public class CPU {
    private InstructionMemory instructionMemory;
    private byte[] dataMemory;
    private byte[] registerFile;
    private SREG sreg;
-   private int pc;
-   private Hashtable pipeline;
+   private short pc;
+   Vector<Object> fetched = null;
+   Hashtable<String, Object> decoded = null;
 
    public CPU() throws CpuException {
       this.instructionMemory = new InstructionMemory();
@@ -18,14 +22,19 @@ public class CPU {
 
    }
 
-   public Word16 fetch() {
+   public Vector<Object> fetch() {
       Word16 wr = this.instructionMemory.getBlock()[pc];
+      Vector<Object> toDecode = new Vector<>();
+      toDecode.add(wr);
+      toDecode.add(pc);
       pc++;
-      return wr;
+      return toDecode;
    }
 
-   public Hashtable decode(String instruction) { // 16 bits
+   public Hashtable<String, Object> decode(Vector<Object> toDecode) { // 16 bits
       Hashtable<String, Object> hashtable = new Hashtable<>();
+
+      String instruction = ((Word16) toDecode.get(0)).getWord16();
 
       String opcodeString = instruction.substring(0, 4);
       String r1String = instruction.substring(4, 10);
@@ -36,19 +45,24 @@ public class CPU {
 
       hashtable.put("opcode", opcode);
       hashtable.put("destination", r1Address);
-      hashtable.put("r1", registerFile[r1Address]);
+      hashtable.put("r1", (byte) registerFile[r1Address]);
 
       if (opcode < 3 || (opcode >= 5 && opcode <= 7)) { // R type
          int r2Address = Integer.parseInt(r2String, 2);
-         hashtable.put("r2", registerFile[r2Address]);
+         hashtable.put("r2", (byte) registerFile[r2Address]);
       } else { // I Type
-         hashtable.put("r2", twosBinaryStringToInt(r2String));
+         hashtable.put("r2", (byte) twosBinaryStringToInt(r2String, opcode));
       }
+      System.out.println(hashtable.toString());
+      hashtable.put("pc", toDecode.get(1));
       return hashtable;
    }
 
-   public int twosBinaryStringToInt(String binString) { // 1100110
+   public int twosBinaryStringToInt(String binString, int opcode) { // 1100110
       int numOfBits = binString.length();
+      if (opcode >= 10) {
+         return Integer.parseInt(binString.substring(0), 2);
+      }
       int result = Integer.parseInt(binString.substring(1), 2);
       if (binString.charAt(0) == '1') {
          result -= Math.pow(2, numOfBits - 1);
@@ -59,11 +73,12 @@ public class CPU {
    public void execute(Hashtable<String, Object> hashtable) throws CpuException {
       // Execute ALU operation
       //
+      System.out.println("instruction currently executing: " + hashtable.get("pc"));
       int opcode = (int) hashtable.get("opcode");
       byte data1 = (byte) hashtable.get("r1");
       byte data2 = (byte) hashtable.get("r2");
       int destination = (int) hashtable.get("destination");
-      boolean jump = false;
+      // boolean jump = false;
       byte result = 0; // 8 bits
 
       switch (opcode) {
@@ -84,8 +99,11 @@ public class CPU {
             break;
          case 4: // BRANCH IF ZERO
             if (data1 == 0) {
-               jump = true;
+               // jump = true;
+               fetched = null;
+               decoded = null;
                pc += data2;
+               System.out.println("pc new value: " + pc);
             }
             break;
          case 5: // AND
@@ -98,6 +116,9 @@ public class CPU {
             break;
          case 7: // JUMP
             pc = concatenateByte(data1, data2);
+            fetched = null;
+            decoded = null;
+            System.out.println("pc new value: " + pc);
             return;
          case 8: // CIRC LEFT
             result = (byte) Integer.rotateLeft(data1, data2);
@@ -112,6 +133,7 @@ public class CPU {
             break;
          case 11: // STORE BYTE
             dataMemory[data2] = data1;
+            System.out.println("M[" + data2 + "] is now: " + data1);
             return;
          default:
             throw new CpuException("Invalid Opcode");
@@ -119,21 +141,63 @@ public class CPU {
 
       registerFile[destination] = result;
 
+      System.out.println("register " + destination + " is now: " + result);
    }
 
-   // private byte concatenateByte(byte data1, byte data2) {
-   // return 0;
-   // }
+   private short concatenateByte(byte data1, byte data2) {
 
-   public void run(int clockCycles) {
+      short temp1 = (short) (data1 & 0xFF);
+      short temp2 = (short) (data2 & 0xFF);
+
+      temp1 = (short) ((temp1 << 8) | temp2);
+
+      return temp1;
+   }
+
+   public void run(int clockCycles) throws CpuException {
       for (int i = 0; i < clockCycles; i++) {
+         System.out.println("clock cycle: " + i);
+         tryExecute();
+         decoded = tryDecode();
+         fetched = tryFetch();
+         System.out.println("\n------------------------------------------\n");
+      }
 
-         fetch(pc);
-         decode("");
-         execute();
-         pc++;
-         // instruction from memory -> fetch
-         // update pipeline fetch -> decode, decode -> execute
+      // for (int i = 0; i < registerFile.length; i++) {
+      // System.out.println("Register " + i + " = " + registerFile[i]);
+      // }
+
+      displayMemory();
+   }
+
+   private void tryExecute() throws CpuException {
+      if (decoded != null) {
+         execute(decoded);
+      }
+   }
+
+   private Hashtable<String, Object> tryDecode() {
+      if (fetched != null) {
+         return decode(fetched);
+      }
+      return null;
+   }
+
+   public Vector<Object> tryFetch() {
+      Vector<Object> v = fetch();
+      if (v != null && v.get(0) != null) {
+         fetched = v;
+      } else {
+         fetched = null;
+      }
+      return fetched;
+   }
+
+   public void displayMemory() {
+      int counter = 0;
+      for (byte a : dataMemory) {
+         System.out.println("Block " + counter + " " + a);
+         counter++;
       }
    }
 
@@ -141,9 +205,8 @@ public class CPU {
       try {
          CPU cpu = new CPU();
          cpu.instructionMemory.loadMemory("instructions.txt");
-         // System.out.println(cpu.fetch(cpu.pc));
-         cpu.instructionMemory.displayMemory();
-
+         cpu.run(19);
+         System.out.println(cpu.dataMemory[60]);
       } catch (CpuException e) {
          System.out.println(e.getMessage());
       } catch (IOException e) {

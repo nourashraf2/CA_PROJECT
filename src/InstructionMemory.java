@@ -21,9 +21,7 @@ public class InstructionMemory {
                 System.out.println("Block " + counter + " " + "null");
                 counter++;
             }
-
         }
-
     }
 
     public void loadMemory(String filepath) throws IOException, CpuException {
@@ -69,10 +67,10 @@ public class InstructionMemory {
                     binaryInstruction = "1001" + registerEncode(instruction[1]) + intEncode(instruction[2]);
                     break;
                 case ("LB"):
-                    binaryInstruction = "1010" + registerEncode(instruction[1]) + intEncode(instruction[2]);
+                    binaryInstruction = "1010" + registerEncode(instruction[1]) + intEncode(instruction[2], "");
                     break;
                 case ("SB"):
-                    binaryInstruction = "1011" + registerEncode(instruction[1]) + intEncode(instruction[2]);
+                    binaryInstruction = "1011" + registerEncode(instruction[1]) + intEncode(instruction[2], "");
                     break;
                 default:
                     throw new CpuException();
@@ -87,12 +85,29 @@ public class InstructionMemory {
 
     }
 
+    public static String intEncode(String str, String nonNegative) throws CpuException { // takes str number "2" convert
+                                                                                         // it into binary
+                                                                                         // number used for immediate
+                                                                                         // values
+        int num = Integer.parseInt(str);
+        if (num >= 0 && num <= 63) {
+            String binaryString = Integer.toBinaryString(num);
+            int numBits = 6; // number of bits to represent the binary number
+            String paddedBinaryString = String.format("%" + numBits + "s", binaryString).replace(' ', '0');
+            return paddedBinaryString;
+        } else {
+            throw new CpuException("Invalid number number should be between 0 and 63 inclusive");
+
+        }
+
+    }
+
     public static String intEncode(String str) throws CpuException { // takes str number "2" convert it into binary
                                                                      // number used for immediate values
         int num = Integer.parseInt(str);
-        if (num < 0 && num >= -32)
+        if (num < 0 && num >= -32) {
             return Integer.toBinaryString(num).substring(26, 32);
-        else if (num >= 0 && num <= 31) {
+        } else if (num >= 0 && num <= 31) {
             String binaryString = Integer.toBinaryString(num);
             int numBits = 6; // number of bits to represent the binary number
             String paddedBinaryString = String.format("%" + numBits + "s", binaryString).replace(' ', '0');

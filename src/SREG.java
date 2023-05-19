@@ -56,28 +56,43 @@ public class SREG {
                 updateV(data1, data2, result);
                 setN(result < 0);
                 setS(getN() ^ getV());
+                setZ(result == 0);
                 break;
             case '-':
                 updateV(data1, data2, result);
                 setN(result < 0);
                 setS(getN() ^ getV());
+                setZ(result == 0);
                 break;
-            case '*':
-                setN(result < 0);
-                break;
-            case '&':
-                setN(result < 0);
-                break;
-            case '|':
-                setN(result < 0);
-                break;
-            case '<':
-                setN(result < 0);
-                break;
+            // case '*':
+            // setN(result < 0);
+            // setZ(result == 0);
+            // break;
+            // case '&':
+            // setN(result < 0);
+            // setZ(result == 0);
+            // break;
+            // case '|':
+            // setN(result < 0);
+            // setZ(result == 0);
+            // break;
+            // case '<':
+            // setN(result < 0);
+            // setZ(result == 0);
+            // break;
             default: // '>'
                 setN(result < 0);
+                setZ(result == 0);
                 break;
         }
+        toString(arr);
+    }
+
+    public void toString(boolean[] arr) {
+        for (Boolean b : arr) {
+            System.out.print(b + " ");
+        }
+        System.out.println();
     }
 
     private void updateV(byte data1, byte data2, byte result) {
