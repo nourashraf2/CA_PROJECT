@@ -70,7 +70,7 @@ public class CPU {
       return result;
    }
 
-   public void execute(Hashtable<String, Object> hashtable) throws CpuException {
+   public int execute(Hashtable<String, Object> hashtable) throws CpuException {
       // Execute ALU operation
       //
       System.out.println("instruction currently executing: " + hashtable.get("pc"));
@@ -119,7 +119,7 @@ public class CPU {
             fetched = null;
             decoded = null;
             System.out.println("pc new value: " + pc);
-            return;
+            return pc;
          case 8: // CIRC LEFT
             result = (byte) Integer.rotateLeft(data1, data2);
             sreg.updateSREG(data1, data2, result, '<');
@@ -134,7 +134,7 @@ public class CPU {
          case 11: // STORE BYTE
             dataMemory[data2] = data1;
             System.out.println("M[" + data2 + "] is now: " + data1);
-            return;
+            return pc;
          default:
             throw new CpuException("Invalid Opcode");
       }
@@ -142,6 +142,8 @@ public class CPU {
       registerFile[destination] = result;
 
       System.out.println("register " + destination + " is now: " + result);
+
+      return -1;
    }
 
    private short concatenateByte(byte data1, byte data2) {
@@ -157,23 +159,27 @@ public class CPU {
    public void run(int clockCycles) throws CpuException {
       for (int i = 0; i < clockCycles; i++) {
          System.out.println("clock cycle: " + i);
-         tryExecute();
+         int j = tryExecute();
+         if (j != -1) {
+            i = j;
+         }
          decoded = tryDecode();
          fetched = tryFetch();
          System.out.println("\n------------------------------------------\n");
       }
 
-      // for (int i = 0; i < registerFile.length; i++) {
-      // System.out.println("Register " + i + " = " + registerFile[i]);
-      // }
+      for (int i = 0; i < registerFile.length; i++) {
+         System.out.println("Register " + i + " = " + registerFile[i]);
+      }
 
       displayMemory();
    }
 
-   private void tryExecute() throws CpuException {
+   private int tryExecute() throws CpuException {
       if (decoded != null) {
-         execute(decoded);
+         return execute(decoded);
       }
+      return -1;
    }
 
    private Hashtable<String, Object> tryDecode() {
