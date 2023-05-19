@@ -64,23 +64,7 @@ public class SREG {
                 setS(getN() ^ getV());
                 setZ(result == 0);
                 break;
-            // case '*':
-            // setN(result < 0);
-            // setZ(result == 0);
-            // break;
-            // case '&':
-            // setN(result < 0);
-            // setZ(result == 0);
-            // break;
-            // case '|':
-            // setN(result < 0);
-            // setZ(result == 0);
-            // break;
-            // case '<':
-            // setN(result < 0);
-            // setZ(result == 0);
-            // break;
-            default: // '>'
+            default:
                 setN(result < 0);
                 setZ(result == 0);
                 break;
@@ -89,8 +73,30 @@ public class SREG {
     }
 
     public void toString(boolean[] arr) {
+        int i = 0;
         for (Boolean b : arr) {
+            switch (i) {
+                case 3:
+                    System.out.print("c: ");
+                    break;
+                case 4:
+                    System.out.print("v: ");
+                    break;
+                case 5:
+                    System.out.print("n: ");
+                    break;
+                case 6:
+                    System.out.print("s: ");
+                    break;
+                case 7:
+                    System.out.print("z: ");
+                    break;
+                default:
+                    System.out.print("_: ");
+                    break;
+            }
             System.out.print(b + " ");
+            i++;
         }
         System.out.println();
     }
