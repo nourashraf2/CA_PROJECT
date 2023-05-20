@@ -1,48 +1,63 @@
 public class SREG {
-    boolean[] arr;
+    int[] arr;
 
     public SREG() {
-        arr = new boolean[] { false, false, false, false, false, false, false, false };// 0 0 0 c v n s z
+        arr = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };// 0 0 0 c v n s z
     }
 
-    public boolean getC() {
+    public int getC() {
         return arr[3];
     }
 
-    public boolean getV() {
+    public int getV() {
         return arr[4];
     }
 
-    public boolean getN() {
+    public int getN() {
         return arr[5];
     }
 
-    public boolean getS() {
+    public int getS() {
         return arr[6];
     }
 
-    public boolean getZ() {
+    public int getZ() {
         return arr[7];
     }
 
-    public void setC(boolean value) {
-        arr[3] = value;
+    public void setC(boolean t) {
+        if (t) {
+            arr[3] = 1;
+        } else
+            arr[3] = 0;
     }
 
-    public void setV(boolean value) {
-        arr[4] = value;
+    public void setV(boolean t) {
+        if (t) {
+            arr[4] = 1;
+        } else
+            arr[4] = 0;
     }
 
-    public void setN(boolean value) {
-        arr[5] = value;
+    public void setN(boolean t) {
+        if (t) {
+            arr[5] = 1;
+        } else
+            arr[5] = 0;
     }
 
-    public void setS(boolean value) {
-        arr[6] = value;
+    public void setS(boolean t) {
+        if (t) {
+            arr[6] = 1;
+        } else
+            arr[6] = 0;
     }
 
-    public void setZ(boolean value) {
-        arr[7] = value;
+    public void setZ(boolean t) {
+        if (t) {
+            arr[7] = 1;
+        } else
+            arr[7] = 0;
     }
 
     public void updateSREG(byte data1, byte data2, byte result, char operator) {
@@ -55,13 +70,17 @@ public class SREG {
 
                 updateV(data1, data2, result);
                 setN(result < 0);
-                setS(getN() ^ getV());
+                int n = getN();
+                int v = getV();
+                setS((n == 1 && v == 0) || (n == 0 && v == 1));
                 setZ(result == 0);
                 break;
             case '-':
                 updateV(data1, data2, result);
                 setN(result < 0);
-                setS(getN() ^ getV());
+                n = getN();
+                v = getV();
+                setS((n == 1 && v == 0) || (n == 0 && v == 1));
                 setZ(result == 0);
                 break;
             default:
@@ -72,10 +91,10 @@ public class SREG {
         toString(arr);
     }
 
-    public void toString(boolean[] arr) {
+    public void toString(int[] arr) {
         int i = 0;
         System.out.print("SREG: ");
-        for (Boolean b : arr) {
+        for (int b : arr) {
             switch (i) {
                 case 3:
                     System.out.print("c: ");
