@@ -23,6 +23,7 @@ public class CPU {
    }
 
    public Vector<Object> fetch() {
+      System.out.println("fetch has no parameters as a function but uses the instance variable pc: " + pc + "\n");
       Word16 wr = this.instructionMemory.getBlock()[pc];
       Vector<Object> toDecode = new Vector<>();
       toDecode.add(wr);
@@ -33,6 +34,9 @@ public class CPU {
 
    public Hashtable<String, Object> decode(Vector<Object> toDecode) { // 16 bits
       Hashtable<String, Object> hashtable = new Hashtable<>();
+
+      System.out.println("Decode parameters: 1- instruction: " + toDecode.get(0));
+      System.out.println("Decode parameters: 2- instruction address (old pc): " + toDecode.get(1) + "\n");
 
       String instruction = ((Word16) toDecode.get(0)).getWord16();
 
@@ -53,7 +57,7 @@ public class CPU {
       } else { // I Type
          hashtable.put("r2", (byte) twosBinaryStringToInt(r2String, opcode));
       }
-      System.out.println(hashtable.toString());
+      // System.out.println(hashtable.toString());
       hashtable.put("pc", toDecode.get(1));
       return hashtable;
    }
@@ -73,14 +77,18 @@ public class CPU {
    public int execute(Hashtable<String, Object> hashtable) throws CpuException {
       // Execute ALU operation
       //
-      System.out.println("instruction currently executing: " + hashtable.get("pc"));
+      System.out.println("instruction currently executing: " + hashtable.get("pc") + "\n");
       int opcode = (int) hashtable.get("opcode");
       byte data1 = (byte) hashtable.get("r1");
       byte data2 = (byte) hashtable.get("r2");
       int destination = (int) hashtable.get("destination");
       // boolean jump = false;
       byte result = 0; // 8 bits
-
+      System.out.println("Execute parameters: 1- opcode: " + opcode);
+      System.out.println("Execute parameters: 2- R1: " + data1);
+      System.out.println("Execute parameters: 3- R2/Imm: " + data2);
+      System.out.println("Execute parameters: 4- destination address: " + destination);
+      System.out.println("Execute parameters: 5- instruction address (old pc): " + hashtable.get("pc") + "\n");
       switch (opcode) {
          case 0: // ADD
             result = (byte) (data1 + data2);
@@ -106,7 +114,7 @@ public class CPU {
                   throw new CpuException("\n\n\n\nPC IS SMALLER THAN 0");
                }
                pc += data2;
-               System.out.println("pc new value: " + pc);
+               System.out.println("pc new value: " + pc + "\n");
             }
             break;
          case 5: // AND
@@ -121,7 +129,7 @@ public class CPU {
             pc = concatenateByte(data1, data2);
             fetched = null;
             decoded = null;
-            System.out.println("pc new value: " + pc);
+            System.out.println("pc new value: " + pc + "\n");
             return pc;
          case 8: // CIRC LEFT
             result = (byte) Integer.rotateLeft(data1, data2);
@@ -136,7 +144,7 @@ public class CPU {
             break;
          case 11: // STORE BYTE
             dataMemory[data2] = data1;
-            System.out.println("M[" + data2 + "] is now: " + data1);
+            System.out.println("M[" + data2 + "] is now: " + data1 + "\n");
             return pc;
          default:
             throw new CpuException("Invalid Opcode");
@@ -144,7 +152,7 @@ public class CPU {
 
       registerFile[destination] = result;
 
-      System.out.println("register " + destination + " is now: " + result);
+      System.out.println("register " + destination + " is now: " + result + "\n");
 
       return -1;
    }
@@ -163,7 +171,7 @@ public class CPU {
       int clockCycles = 0;
       System.out.println("\n\n------------------------------------------\n");
       for (int i = 0; i < 3 + ((instructionMemory.actualSize - 1) * 1); i++) {
-         System.out.println("clock cycle: " + clockCycles);
+         System.out.println("clock cycle: " + clockCycles + "\n");
          int j = tryExecute();
          if (j != -1) {
             i = j;
@@ -177,10 +185,14 @@ public class CPU {
       System.out.println("\n");
 
       for (int i = 0; i < registerFile.length; i++) {
-      System.out.println("Register " + i + " = " + registerFile[i]);
+         System.out.println("Register " + i + " = " + registerFile[i]);
       }
 
+      System.out.println("\n\nData Memory: \n\n");
       displayMemory();
+
+      System.out.println("\n\nInstruction Memory: \n\n");
+      instructionMemory.displayMemory();
    }
 
    private int tryExecute() throws CpuException {

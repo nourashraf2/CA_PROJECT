@@ -74,6 +74,7 @@ public class SREG {
 
     public void toString(boolean[] arr) {
         int i = 0;
+        System.out.print("SREG: ");
         for (Boolean b : arr) {
             switch (i) {
                 case 3:
@@ -98,7 +99,7 @@ public class SREG {
             System.out.print(b + " ");
             i++;
         }
-        System.out.println();
+        System.out.println("\n");
     }
 
     private void updateV(byte data1, byte data2, byte result) {
