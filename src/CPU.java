@@ -110,10 +110,10 @@ public class CPU {
                // jump = true;
                fetched = null;
                decoded = null;
-               if (pc + data2 < 0) {
+               pc += data2;
+               if (pc < 0) {
                   throw new CpuException("\n\n\n\nPC IS SMALLER THAN 0");
                }
-               pc += data2;
                System.out.println("pc new value: " + pc + "\n");
             }
             break;
@@ -126,9 +126,12 @@ public class CPU {
             sreg.updateSREG(data1, data2, result, '|');
             break;
          case 7: // JUMP
-            pc = concatenateByte(data1, data2);
             fetched = null;
             decoded = null;
+            pc = concatenateByte(data1, data2);
+            if (pc < 0) {
+               throw new CpuException("\n\n\n\nPC IS SMALLER THAN 0");
+            }
             System.out.println("pc new value: " + pc + "\n");
             return pc;
          case 8: // CIRC LEFT
