@@ -191,6 +191,9 @@ public class CPU {
          System.out.println("Register " + i + " = " + registerFile[i]);
       }
 
+      System.out.println();
+      sreg.toString(sreg.arr);
+
       System.out.println("\n\nData Memory: \n\n");
       displayMemory();
 
