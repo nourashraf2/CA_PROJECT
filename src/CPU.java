@@ -192,7 +192,7 @@ public class CPU {
       }
 
       System.out.println();
-      sreg.toString(sreg.arr);
+      SREG.toString(sreg.arr);
 
       System.out.println("\n\nData Memory: \n\n");
       displayMemory();
