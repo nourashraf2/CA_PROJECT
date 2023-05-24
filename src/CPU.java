@@ -23,7 +23,7 @@ public class CPU {
    }
 
    public Vector<Object> fetch() {
-      System.out.println("fetch has no parameters as a function but uses the instance variable pc: " + pc + "\n");
+      System.out.println("Fetch parameters 1- pc: " + pc + "\n");
       Word16 wr = this.instructionMemory.getBlock()[pc];
       Vector<Object> toDecode = new Vector<>();
       toDecode.add(wr);
@@ -32,13 +32,13 @@ public class CPU {
       return toDecode;
    }
 
-   public Hashtable<String, Object> decode(Vector<Object> toDecode) { // 16 bits
+   public Hashtable<String, Object> decode() { // 16 bits
       Hashtable<String, Object> hashtable = new Hashtable<>();
 
-      System.out.println("Decode parameters: 1- instruction: " + toDecode.get(0));
-      System.out.println("Decode parameters: 2- instruction address (old pc): " + toDecode.get(1) + "\n");
+      System.out.println("Decode parameters: 1- instruction: " + fetched.get(0));
+      System.out.println("Decode parameters: 2- instruction address (old pc): " + fetched.get(1) + "\n");
 
-      String instruction = ((Word16) toDecode.get(0)).getWord16();
+      String instruction = ((Word16) fetched.get(0)).getWord16();
 
       String opcodeString = instruction.substring(0, 4);
       String r1String = instruction.substring(4, 10);
@@ -58,7 +58,7 @@ public class CPU {
          hashtable.put("r2", (byte) twosBinaryStringToInt(r2String, opcode));
       }
       // System.out.println(hashtable.toString());
-      hashtable.put("pc", toDecode.get(1));
+      hashtable.put("pc", fetched.get(1));
       return hashtable;
    }
 
@@ -74,21 +74,21 @@ public class CPU {
       return result;
    }
 
-   public int execute(Hashtable<String, Object> hashtable) throws CpuException {
+   public int execute() throws CpuException {
       // Execute ALU operation
       //
-      System.out.println("instruction currently executing: " + hashtable.get("pc") + "\n");
-      int opcode = (int) hashtable.get("opcode");
-      byte data1 = (byte) hashtable.get("r1");
-      byte data2 = (byte) hashtable.get("r2");
-      int destination = (int) hashtable.get("destination");
+      System.out.println("instruction currently executing: " + decoded.get("pc") + "\n");
+      int opcode = (int) decoded.get("opcode");
+      byte data1 = (byte) decoded.get("r1");
+      byte data2 = (byte) decoded.get("r2");
+      int destination = (int) decoded.get("destination");
       // boolean jump = false;
       byte result = 0; // 8 bits
       System.out.println("Execute parameters: 1- opcode: " + opcode);
       System.out.println("Execute parameters: 2- R1: " + data1);
       System.out.println("Execute parameters: 3- R2/Imm: " + data2);
       System.out.println("Execute parameters: 4- destination address: " + destination);
-      System.out.println("Execute parameters: 5- instruction address (old pc): " + hashtable.get("pc") + "\n");
+      System.out.println("Execute parameters: 5- instruction address (old pc): " + decoded.get("pc") + "\n");
       switch (opcode) {
          case 0: // ADD
             result = (byte) (data1 + data2);
@@ -203,14 +203,14 @@ public class CPU {
 
    private int tryExecute() throws CpuException {
       if (decoded != null) {
-         return execute(decoded);
+         return execute();
       }
       return -1;
    }
 
    private Hashtable<String, Object> tryDecode() {
       if (fetched != null) {
-         return decode(fetched);
+         return decode();
       }
       return null;
    }
