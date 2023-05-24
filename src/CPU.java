@@ -23,7 +23,7 @@ public class CPU {
    }
 
    public Vector<Object> fetch() {
-      System.out.println("Fetch parameters 1- pc: " + pc + "\n");
+      System.out.println("Instruction currently fetching: " + pc + "\n");
       Word16 wr = this.instructionMemory.getBlock()[pc];
       Vector<Object> toDecode = new Vector<>();
       toDecode.add(wr);
@@ -35,8 +35,8 @@ public class CPU {
    public Hashtable<String, Object> decode() { // 16 bits
       Hashtable<String, Object> hashtable = new Hashtable<>();
 
-      System.out.println("Decode parameters: 1- instruction: " + fetched.get(0));
-      System.out.println("Decode parameters: 2- instruction address (old pc): " + fetched.get(1) + "\n");
+      System.out.println("Instruction currently decoding: " + fetched.get(1));
+      System.out.println("    Decode parameters: 1- instruction: " + fetched.get(0) + "\n");
 
       String instruction = ((Word16) fetched.get(0)).getWord16();
 
@@ -57,7 +57,6 @@ public class CPU {
       } else { // I Type
          hashtable.put("r2", (byte) twosBinaryStringToInt(r2String, opcode));
       }
-      // System.out.println(hashtable.toString());
       hashtable.put("pc", fetched.get(1));
       return hashtable;
    }
@@ -77,18 +76,17 @@ public class CPU {
    public int execute() throws CpuException {
       // Execute ALU operation
       //
-      System.out.println("instruction currently executing: " + decoded.get("pc") + "\n");
+      System.out.println("instruction currently executing: " + decoded.get("pc"));
       int opcode = (int) decoded.get("opcode");
       byte data1 = (byte) decoded.get("r1");
       byte data2 = (byte) decoded.get("r2");
       int destination = (int) decoded.get("destination");
       // boolean jump = false;
       byte result = 0; // 8 bits
-      System.out.println("Execute parameters: 1- opcode: " + opcode);
-      System.out.println("Execute parameters: 2- R1: " + data1);
-      System.out.println("Execute parameters: 3- R2/Imm: " + data2);
-      System.out.println("Execute parameters: 4- destination address: " + destination);
-      System.out.println("Execute parameters: 5- instruction address (old pc): " + decoded.get("pc") + "\n");
+      System.out.println("    Execute parameters: 1- opcode: " + opcode);
+      System.out.println("    Execute parameters: 2- R1: " + data1);
+      System.out.println("    Execute parameters: 3- R2/Imm: " + data2);
+      System.out.println("    Execute parameters: 4- destination address: " + destination + "\n");
       switch (opcode) {
          case 0: // ADD
             result = (byte) (data1 + data2);
@@ -107,10 +105,9 @@ public class CPU {
             break;
          case 4: // BRANCH IF ZERO
             if (data1 == 0) {
-               // jump = true;
+               pc = (short) ((short) decoded.get("pc") + data2 + 1);
                fetched = null;
                decoded = null;
-               pc += data2;
                if (pc < 0) {
                   throw new CpuException("\n\n\n\nPC IS SMALLER THAN 0");
                }
