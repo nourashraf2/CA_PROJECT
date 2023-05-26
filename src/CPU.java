@@ -84,8 +84,8 @@ public class CPU {
       // boolean jump = false;
       byte result = 0; // 8 bits
       System.out.println("    Execute parameters: 1- opcode: " + opcode);
-      System.out.println("    Execute parameters: 2- R1: " + data1);
-      System.out.println("    Execute parameters: 3- R2/Imm: " + data2);
+      System.out.println("    Execute parameters: 2- R1 (data): " + data1);
+      System.out.println("    Execute parameters: 3- R2/Imm (data): " + data2);
       System.out.println("    Execute parameters: 4- destination address: " + destination + "\n");
       switch (opcode) {
          case 0: // ADD
