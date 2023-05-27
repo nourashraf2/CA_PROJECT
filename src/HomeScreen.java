@@ -50,7 +50,9 @@ public class HomeScreen extends JFrame {
             run();
         });
 
+        buttonPanel.add(new JLabel("🙃🙃🙃🙃🙃🙃🙃🙃"));
         buttonPanel.add(runButton);
+        buttonPanel.add(new JLabel("🙃🙃🙃🙃🙃🙃🙃🙃"));
 
         // Create the content panel with GridBagLayout
         JPanel contentPanel = new JPanel(new GridBagLayout());
