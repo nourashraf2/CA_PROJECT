@@ -36,10 +36,10 @@ public class CPU {
    public Hashtable<String, Object> decode() { // 16 bits
       Hashtable<String, Object> hashtable = new Hashtable<>();
 
-      HomeScreen.textAreaRight.append("Decode parameters: 1- instruction: " + toDecode.get(0) + "\n");
-      HomeScreen.textAreaRight.append("Decode parameters: 2- instruction address (old pc): " + toDecode.get(1) + "\n");
-      System.out.println("Decode parameters: 1- instruction: " + toDecode.get(0));
-      System.out.println("Decode parameters: 2- instruction address (old pc): " + toDecode.get(1) + "\n");
+      HomeScreen.textAreaRight.append("Decode parameters: 1- instruction: " + fetched.get(0) + "\n");
+      HomeScreen.textAreaRight.append("Decode parameters: 2- instruction address (old pc): " + fetched.get(1) + "\n");
+      System.out.println("Decode parameters: 1- instruction: " + fetched.get(0));
+      System.out.println("Decode parameters: 2- instruction address (old pc): " + fetched.get(1) + "\n");
 
       String instruction = ((Word16) fetched.get(0)).getWord16();
 
@@ -79,26 +79,26 @@ public class CPU {
    public int execute() throws CpuException {
       // Execute ALU operation
       //
-      HomeScreen.textAreaRight.append("instruction currently executing: " + hashtable.get("pc") + "\n");
-      System.out.println("instruction currently executing: " + hashtable.get("pc") + "\n");
-      int opcode = (int) hashtable.get("opcode");
-      byte data1 = (byte) hashtable.get("r1");
-      byte data2 = (byte) hashtable.get("r2");
-      int destination = (int) hashtable.get("destination");
+      HomeScreen.textAreaRight.append("instruction currently executing: " + decoded.get("pc") + "\n");
+      System.out.println("instruction currently executing: " + decoded.get("pc") + "\n");
+      int opcode = (int) decoded.get("opcode");
+      byte data1 = (byte) decoded.get("r1");
+      byte data2 = (byte) decoded.get("r2");
+      int destination = (int) decoded.get("destination");
       // boolean jump = false;
       byte result = 0; // 8 bits
       System.out.println("Execute parameters: 1- opcode: " + opcode);
       System.out.println("Execute parameters: 2- R1: " + data1);
       System.out.println("Execute parameters: 3- R2/Imm: " + data2);
       System.out.println("Execute parameters: 4- destination address: " + destination);
-      System.out.println("Execute parameters: 5- instruction address (old pc): " + hashtable.get("pc") + "\n");
+      System.out.println("Execute parameters: 5- instruction address (old pc): " + decoded.get("pc") + "\n");
 
       
       HomeScreen.textAreaRight.append("Execute parameters: 1- opcode: " + opcode + "\n");
       HomeScreen.textAreaRight.append("Execute parameters: 2- R1: " + "\n");
       HomeScreen.textAreaRight.append("Execute parameters: 3- R2/Imm: " + data2 + "\n");
       HomeScreen.textAreaRight.append("Execute parameters: 4- destination address: " + destination + "\n");
-      HomeScreen.textAreaRight.append("Execute parameters: 5- instruction address (old pc): " + hashtable.get("pc") + "\n");
+      HomeScreen.textAreaRight.append("Execute parameters: 5- instruction address (old pc): " + decoded.get("pc") + "\n");
       switch (opcode) {
          case 0: // ADD
             result = (byte) (data1 + data2);
