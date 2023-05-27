@@ -19,20 +19,16 @@ public class HomeScreen extends JFrame {
         setPreferredSize(new Dimension(1900, 1200));
         setExtendedState(MAXIMIZED_BOTH);
 
-        // Create the main panel
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel);
 
-        // Create the top panel with a split layout
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new GridLayout(1, 2));
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        // Add components to the top panel
         textAreaLeft.setFont(new Font("Arial", Font.PLAIN, 16));
         textAreaLeft.setText("Type Instructions Here\n1 Instruction per line");
-        // textAreaLeft
         topPanel.add(new JScrollPane(textAreaLeft));
 
         textAreaRight.setEditable(false);
@@ -40,29 +36,49 @@ public class HomeScreen extends JFrame {
         textAreaRight.setText("CPU Process will be displayed here");
         topPanel.add(new JScrollPane(textAreaRight));
 
-        // Create the button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        // Add a button to the button panel
         JButton runButton = new JButton("Run");
         runButton.addActionListener(e -> {
-            // Call your method here
             run();
         });
 
-        buttonPanel.add(new JLabel("🙃🙃🙃🙃🙃🙃🙃🙃"));
-        buttonPanel.add(runButton);
-        buttonPanel.add(new JLabel("🙃🙃🙃🙃🙃🙃🙃🙃"));
+        runButton.setFont(new Font("Arial", Font.BOLD, 18));
+        runButton.setPreferredSize(new Dimension(150, 50));
 
-        // Create the content panel with GridBagLayout
+        runButton.setUI(new javax.swing.plaf.basic.BasicButtonUI() {
+            @Override
+            public void paint(Graphics g, JComponent c) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(Color.BLACK);
+                g2.fillRoundRect(0, 0, c.getWidth(), c.getHeight(), 10, 10);
+                g2.setColor(Color.WHITE);
+                g2.setFont(c.getFont());
+                FontMetrics fm = g2.getFontMetrics();
+                String text = ((AbstractButton) c).getText();
+                int x = (c.getWidth() - fm.stringWidth(text)) / 2;
+                int y = (c.getHeight() + fm.getAscent()) / 2 - 2;
+                g2.drawString(text, x, y);
+                g2.dispose();
+            }
+        });
+
+        JLabel fire1 = new JLabel("🔥🔥🔥🔥🔥🔥🔥🔥");
+        fire1.setFont(new Font("Arial", Font.BOLD, 22));
+        JLabel fire2 = new JLabel("🔥🔥🔥🔥🔥🔥🔥🔥");
+        fire2.setFont(new Font("Arial", Font.BOLD, 22));
+
+        buttonPanel.add(fire1);
+        buttonPanel.add(runButton);
+        buttonPanel.add(fire2);
+
         JPanel contentPanel = new JPanel(new GridBagLayout());
 
-        // Create GridBagConstraints for positioning components
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.NORTHWEST;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Add content to the content panel (example labels and text areas)
         gbc.gridx = 0;
         gbc.gridy = 0;
         contentPanel.add(new JLabel("Register File"), gbc);
