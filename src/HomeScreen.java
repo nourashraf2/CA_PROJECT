@@ -9,9 +9,9 @@ import java.io.IOException;
 public class HomeScreen extends JFrame {
     static JTextArea textAreaLeft = new JTextArea(20, 20);
     static JTextArea textAreaRight = new JTextArea(20, 20);
-    static JTextArea textAreaReg = new JTextArea(15, 20);
-    static JTextArea textAreaInstMem = new JTextArea(15, 20);
-    static JTextArea textAreaDataMem = new JTextArea(15, 20);
+    static JTextArea textAreaReg = new JTextArea(20, 30);
+    static JTextArea textAreaInstMem = new JTextArea(20, 30);
+    static JTextArea textAreaDataMem = new JTextArea(20, 30);
 
     public HomeScreen() {
         setTitle("Swing Layout Example");
@@ -32,6 +32,7 @@ public class HomeScreen extends JFrame {
         // Add components to the top panel
         textAreaLeft.setFont(new Font("Arial", Font.PLAIN, 16));
         textAreaLeft.setText("Type Instructions Here\n1 Instruction per line");
+        // textAreaLeft
         topPanel.add(new JScrollPane(textAreaLeft));
 
         textAreaRight.setEditable(false);
@@ -95,6 +96,10 @@ public class HomeScreen extends JFrame {
 
     public static void run() {
         File file = new File("instructions.txt");
+        textAreaDataMem.setText("");
+        textAreaInstMem.setText("");
+        textAreaReg.setText("");
+        textAreaRight.setText("");
         try {
             FileWriter fileWriter = new FileWriter(file);
             BufferedWriter writer = new BufferedWriter(fileWriter);

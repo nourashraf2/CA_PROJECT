@@ -122,15 +122,20 @@ public class InstructionMemory {
 
     }
 
-    public static String registerEncode(String str) { // takes register R1 and convert it into a binary 000001
+    public static String registerEncode(String str) throws CpuException { // takes register R1 and convert it into a
+                                                                          // binary 000001
 
         if (str.length() == 3) {
             String temp = str.charAt(1) + "" + str.charAt(2);
             int registerNum = Integer.parseInt(temp);
+            if (registerNum > 63)
+                throw new CpuException("register does not exits");
             return toBitsUnsigned(registerNum);
         } else {
             String temp = str.charAt(1) + "";
             int registerNum = Integer.parseInt(temp);
+            if (registerNum > 63)
+                throw new CpuException("register does not exits");
             return toBitsUnsigned(registerNum);
 
         }
