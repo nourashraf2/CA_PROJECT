@@ -38,7 +38,7 @@ public class CPU {
       Hashtable<String, Object> hashtable = new Hashtable<>();
 
       HomeScreen.textAreaRight.append("Instruction currently decoding: " + fetched.get(1) + "\n");
-      HomeScreen.textAreaRight.append("Decode parameters: 1- instruction: " + fetched.get(0) + "\n");
+      HomeScreen.textAreaRight.append("   Decode parameters: 1- instruction: " + fetched.get(0) + "\n");
       System.out.println("Instruction currently decoding: " + fetched.get(1) + "\n");
       System.out.println("Decode parameters: 1- instruction: " + fetched.get(0));
 
@@ -94,12 +94,12 @@ public class CPU {
       System.out.println("Execute parameters: 4- destination address: " + destination);
       System.out.println("Execute parameters: 5- instruction address (old pc): " + decoded.get("pc") + "\n");
 
-      HomeScreen.textAreaRight.append("Execute parameters: 1- opcode: " + opcode + "\n");
-      HomeScreen.textAreaRight.append("Execute parameters: 2- R1: " + "\n");
-      HomeScreen.textAreaRight.append("Execute parameters: 3- R2/Imm: " + data2 + "\n");
-      HomeScreen.textAreaRight.append("Execute parameters: 4- destination address: " + destination + "\n");
+      HomeScreen.textAreaRight.append("   Execute parameters: 1- opcode: " + opcode + "\n");
+      HomeScreen.textAreaRight.append("   Execute parameters: 2- R1: " + "\n");
+      HomeScreen.textAreaRight.append("   Execute parameters: 3- R2/Imm: " + data2 + "\n");
+      HomeScreen.textAreaRight.append("   Execute parameters: 4- destination address: " + destination + "\n");
       HomeScreen.textAreaRight
-            .append("Execute parameters: 5- instruction address (old pc): " + decoded.get("pc") + "\n");
+            .append("   Execute parameters: 5- instruction address (old pc): " + decoded.get("pc") + "\n");
       switch (opcode) {
          case 0: // ADD
             result = (byte) (data1 + data2);
