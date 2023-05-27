@@ -78,7 +78,7 @@ public class InstructionMemory {
                     binaryInstruction = "1011" + registerEncode(instruction[1]) + intEncode(instruction[2], "");
                     break;
                 default:
-                    throw new CpuException();
+                    throw new CpuException("invalid instruction");
             }
 
             block[counter] = new Word16(binaryInstruction);

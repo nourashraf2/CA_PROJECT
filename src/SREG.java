@@ -91,7 +91,7 @@ public class SREG {
         toString(arr);
     }
 
-    public void toString(int[] arr) {
+    public static void toString(int[] arr) {
         int i = 0;
         System.out.print("SREG: ");
         for (int b : arr) {
