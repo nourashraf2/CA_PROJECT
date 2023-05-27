@@ -88,36 +88,84 @@ public class SREG {
                 setZ(result == 0);
                 break;
         }
-        toString(arr);
+        printSREG(arr);
     }
 
-    public static void toString(int[] arr) {
+    public static void printSREG(int[] arr) {
         int i = 0;
         System.out.print("SREG: ");
+        HomeScreen.textAreaRight.append("SREG: ");
         for (int b : arr) {
             switch (i) {
                 case 3:
                     System.out.print("c: ");
+                    HomeScreen.textAreaRight.append("c: ");
                     break;
                 case 4:
                     System.out.print("v: ");
+                    HomeScreen.textAreaRight.append("v: ");
                     break;
                 case 5:
                     System.out.print("n: ");
+                    HomeScreen.textAreaRight.append("n: ");
                     break;
                 case 6:
                     System.out.print("s: ");
+                    HomeScreen.textAreaRight.append("s: ");
                     break;
                 case 7:
                     System.out.print("z: ");
+                    HomeScreen.textAreaRight.append("z: ");
                     break;
                 default:
                     System.out.print("_: ");
+                    HomeScreen.textAreaRight.append("_: ");
                     break;
             }
+            HomeScreen.textAreaRight.append(b + " ");
             System.out.print(b + " ");
             i++;
         }
+        HomeScreen.textAreaRight.append("\n");
+        System.out.println("\n");
+    }
+
+    public static void printToReg(int[] arr) {
+        int i = 0;
+        System.out.print("SREG: ");
+        HomeScreen.textAreaReg.append("SREG: ");
+        for (int b : arr) {
+            switch (i) {
+                case 3:
+                    System.out.print("c: ");
+                    HomeScreen.textAreaReg.append("c: ");
+                    break;
+                case 4:
+                    System.out.print("v: ");
+                    HomeScreen.textAreaReg.append("v: ");
+                    break;
+                case 5:
+                    System.out.print("n: ");
+                    HomeScreen.textAreaReg.append("n: ");
+                    break;
+                case 6:
+                    System.out.print("s: ");
+                    HomeScreen.textAreaReg.append("s: ");
+                    break;
+                case 7:
+                    System.out.print("z: ");
+                    HomeScreen.textAreaReg.append("z: ");
+                    break;
+                default:
+                    System.out.print("_: ");
+                    HomeScreen.textAreaReg.append("_: ");
+                    break;
+            }
+            HomeScreen.textAreaReg.append(b + " ");
+            System.out.print(b + " ");
+            i++;
+        }
+        HomeScreen.textAreaReg.append("\n");
         System.out.println("\n");
     }
 
