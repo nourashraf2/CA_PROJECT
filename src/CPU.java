@@ -5,7 +5,7 @@ import java.util.Vector;
 import javax.xml.crypto.Data;
 
 public class CPU {
-   private InstructionMemory instructionMemory;
+   InstructionMemory instructionMemory;
    private byte[] dataMemory;
    private byte[] registerFile;
    private SREG sreg;
@@ -23,6 +23,7 @@ public class CPU {
    }
 
    public Vector<Object> fetch() {
+      HomeScreen.textAreaRight.append("fetch has no parameters as a function but uses the instance variable pc: " + pc + "\n");
       System.out.println("fetch has no parameters as a function but uses the instance variable pc: " + pc + "\n");
       Word16 wr = this.instructionMemory.getBlock()[pc];
       Vector<Object> toDecode = new Vector<>();
@@ -35,6 +36,8 @@ public class CPU {
    public Hashtable<String, Object> decode(Vector<Object> toDecode) { // 16 bits
       Hashtable<String, Object> hashtable = new Hashtable<>();
 
+      HomeScreen.textAreaRight.append("Decode parameters: 1- instruction: " + toDecode.get(0) + "\n");
+      HomeScreen.textAreaRight.append("Decode parameters: 2- instruction address (old pc): " + toDecode.get(1) + "\n");
       System.out.println("Decode parameters: 1- instruction: " + toDecode.get(0));
       System.out.println("Decode parameters: 2- instruction address (old pc): " + toDecode.get(1) + "\n");
 
@@ -77,6 +80,7 @@ public class CPU {
    public int execute(Hashtable<String, Object> hashtable) throws CpuException {
       // Execute ALU operation
       //
+      HomeScreen.textAreaRight.append("instruction currently executing: " + hashtable.get("pc") + "\n");
       System.out.println("instruction currently executing: " + hashtable.get("pc") + "\n");
       int opcode = (int) hashtable.get("opcode");
       byte data1 = (byte) hashtable.get("r1");
@@ -89,6 +93,13 @@ public class CPU {
       System.out.println("Execute parameters: 3- R2/Imm: " + data2);
       System.out.println("Execute parameters: 4- destination address: " + destination);
       System.out.println("Execute parameters: 5- instruction address (old pc): " + hashtable.get("pc") + "\n");
+
+      
+      HomeScreen.textAreaRight.append("Execute parameters: 1- opcode: " + opcode + "\n");
+      HomeScreen.textAreaRight.append("Execute parameters: 2- R1: " + "\n");
+      HomeScreen.textAreaRight.append("Execute parameters: 3- R2/Imm: " + data2 + "\n");
+      HomeScreen.textAreaRight.append("Execute parameters: 4- destination address: " + destination + "\n");
+      HomeScreen.textAreaRight.append("Execute parameters: 5- instruction address (old pc): " + hashtable.get("pc") + "\n");
       switch (opcode) {
          case 0: // ADD
             result = (byte) (data1 + data2);
@@ -114,7 +125,8 @@ public class CPU {
                if (pc < 0) {
                   throw new CpuException("\n\n\n\nPC IS SMALLER THAN 0");
                }
-               System.out.println("pc new value: " + pc + "\n");
+               HomeScreen.textAreaRight.append("New PC value: " + pc + "\n");
+               System.out.println("New PC value: " + pc + "\n");
             }
             break;
          case 5: // AND
@@ -132,6 +144,7 @@ public class CPU {
             if (pc < 0) {
                throw new CpuException("\n\n\n\nPC IS SMALLER THAN 0");
             }
+            HomeScreen.textAreaRight.append("New PC value: " + pc + "\n");
             System.out.println("pc new value: " + pc + "\n");
             return pc;
          case 8: // CIRC LEFT
@@ -147,6 +160,7 @@ public class CPU {
             break;
          case 11: // STORE BYTE
             dataMemory[data2] = data1;
+            HomeScreen.textAreaRight.append("M[" + data2 + "] is now: " + data1 + "\n");
             System.out.println("M[" + data2 + "] is now: " + data1 + "\n");
             return pc;
          default:
@@ -155,6 +169,7 @@ public class CPU {
 
       registerFile[destination] = result;
 
+      HomeScreen.textAreaRight.append("Register " + destination + " is now: " + result + "\n");
       System.out.println("register " + destination + " is now: " + result + "\n");
 
       return -1;
@@ -173,14 +188,17 @@ public class CPU {
    public void run() throws CpuException {
       int clockCycles = 0;
       System.out.println("\n\n------------------------------------------\n");
+      HomeScreen.textAreaRight.append("\n\n------------------------------------------\n");
       for (int i = 0; i < 3 + ((instructionMemory.actualSize - 1) * 1); i++) {
          System.out.println("clock cycle: " + clockCycles + "\n");
+         HomeScreen.textAreaRight.append("Clock cycle: " + clockCycles + "\n");
          int j = tryExecute();
          if (j != -1) {
             i = j;
          }
          decoded = tryDecode();
          fetched = tryFetch();
+         HomeScreen.textAreaRight.append("\n------------------------------------------\n");
          System.out.println("\n------------------------------------------\n");
          clockCycles++;
       }
@@ -188,6 +206,7 @@ public class CPU {
       System.out.println("\n");
 
       for (int i = 0; i < registerFile.length; i++) {
+         HomeScreen.textAreaReg.append("Register " + i + " = " + registerFile[i] + "\n");
          System.out.println("Register " + i + " = " + registerFile[i]);
       }
 
@@ -228,6 +247,7 @@ public class CPU {
    public void displayMemory() {
       int counter = 0;
       for (byte a : dataMemory) {
+         HomeScreen.textAreaDataMem.append("Block " + counter + " " + a + "\n");
          System.out.println("Block " + counter + " " + a);
          counter++;
       }

@@ -16,9 +16,11 @@ public class InstructionMemory {
         int counter = 0;
         for (Word16 a : this.block) {
             if (a != null) {
+                HomeScreen.textAreaInstMem.append("Block " + counter + " " + a.toString() + "\n");
                 System.out.println("Block " + counter + " " + a.toString());
                 counter++;
             } else {
+                HomeScreen.textAreaInstMem.append("Block " + counter + " null" + "\n");
                 System.out.println("Block " + counter + " " + "null");
                 counter++;
             }
