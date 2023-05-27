@@ -23,8 +23,9 @@ public class CPU {
    }
 
    public Vector<Object> fetch() {
-      HomeScreen.textAreaRight.append("fetch has no parameters as a function but uses the instance variable pc: " + pc + "\n");
-      System.out.println("fetch has no parameters as a function but uses the instance variable pc: " + pc + "\n");
+      HomeScreen.textAreaRight
+            .append("Instruction currently fetching: " + pc + "\n");
+      System.out.println("Instruction currently fetching: " + pc + "\n");
       Word16 wr = this.instructionMemory.getBlock()[pc];
       Vector<Object> toDecode = new Vector<>();
       toDecode.add(wr);
@@ -36,10 +37,10 @@ public class CPU {
    public Hashtable<String, Object> decode() { // 16 bits
       Hashtable<String, Object> hashtable = new Hashtable<>();
 
+      HomeScreen.textAreaRight.append("Instruction currently decoding: " + fetched.get(1) + "\n");
       HomeScreen.textAreaRight.append("Decode parameters: 1- instruction: " + fetched.get(0) + "\n");
-      HomeScreen.textAreaRight.append("Decode parameters: 2- instruction address (old pc): " + fetched.get(1) + "\n");
+      System.out.println("Instruction currently decoding: " + fetched.get(1) + "\n");
       System.out.println("Decode parameters: 1- instruction: " + fetched.get(0));
-      System.out.println("Decode parameters: 2- instruction address (old pc): " + fetched.get(1) + "\n");
 
       String instruction = ((Word16) fetched.get(0)).getWord16();
 
@@ -79,7 +80,7 @@ public class CPU {
    public int execute() throws CpuException {
       // Execute ALU operation
       //
-      HomeScreen.textAreaRight.append("instruction currently executing: " + decoded.get("pc") + "\n");
+      HomeScreen.textAreaRight.append("Instruction currently executing: " + decoded.get("pc") + "\n");
       System.out.println("instruction currently executing: " + decoded.get("pc") + "\n");
       int opcode = (int) decoded.get("opcode");
       byte data1 = (byte) decoded.get("r1");
@@ -93,12 +94,12 @@ public class CPU {
       System.out.println("Execute parameters: 4- destination address: " + destination);
       System.out.println("Execute parameters: 5- instruction address (old pc): " + decoded.get("pc") + "\n");
 
-      
       HomeScreen.textAreaRight.append("Execute parameters: 1- opcode: " + opcode + "\n");
       HomeScreen.textAreaRight.append("Execute parameters: 2- R1: " + "\n");
       HomeScreen.textAreaRight.append("Execute parameters: 3- R2/Imm: " + data2 + "\n");
       HomeScreen.textAreaRight.append("Execute parameters: 4- destination address: " + destination + "\n");
-      HomeScreen.textAreaRight.append("Execute parameters: 5- instruction address (old pc): " + decoded.get("pc") + "\n");
+      HomeScreen.textAreaRight
+            .append("Execute parameters: 5- instruction address (old pc): " + decoded.get("pc") + "\n");
       switch (opcode) {
          case 0: // ADD
             result = (byte) (data1 + data2);
@@ -146,15 +147,15 @@ public class CPU {
             System.out.println("pc new value: " + pc + "\n");
             return pc;
          case 8: // CIRC LEFT
-//          result = (byte) Integer.rotateLeft(data1, data2);
-//          sreg.updateSREG(data1, data2, result, '>');
-            result = (byte) Integer.rotateLeft((byte)(data1 & 0xFF),(byte) (data2 & 0xFF));
+            // result = (byte) Integer.rotateLeft(data1, data2);
+            // sreg.updateSREG(data1, data2, result, '>');
+            result = (byte) Integer.rotateLeft((byte) (data1 & 0xFF), (byte) (data2 & 0xFF));
             sreg.updateSREG(data1, (byte) (data2 & 0xFF), result, '<');
             break;
          case 9: // CIRC RIGHT
-//            result = (byte) Integer.rotateRight(data1, data2);
-//            sreg.updateSREG(data1, data2, result, '>');
-            result = (byte) Integer.rotateRight((byte)(data1 & 0xFF),(byte) (data2 & 0xFF));
+            // result = (byte) Integer.rotateRight(data1, data2);
+            // sreg.updateSREG(data1, data2, result, '>');
+            result = (byte) Integer.rotateRight((byte) (data1 & 0xFF), (byte) (data2 & 0xFF));
             sreg.updateSREG(data1, (byte) (data2 & 0xFF), result, '<');
             break;
          case 10: // LOAD BYTE
@@ -176,8 +177,6 @@ public class CPU {
 
       return -1;
    }
-
-
 
    private short concatenateByte(byte data1, byte data2) {
 
@@ -217,7 +216,6 @@ public class CPU {
       System.out.println();
       // SREG.toString(sreg.arr);
       SREG.printToReg(sreg.arr);
-   
 
       System.out.println("\n\nData Memory: \n\n");
       displayMemory();
@@ -270,8 +268,8 @@ public class CPU {
    public static void main(String[] args) {
       try {
          CPU cpu = new CPU();
-         cpu.registerFile[1]=3;  //00000011   11110111   ->>> 0000   0001100 0001101
-         cpu.registerFile[2]=4;  //0000 0100  11111011   1111 1100  00111111
+         cpu.registerFile[1] = 3; // 00000011 11110111 ->>> 0000 0001100 0001101
+         cpu.registerFile[2] = 4; // 0000 0100 11111011 1111 1100 00111111
          cpu.instructionMemory.loadMemory("CA/instructions.txt");
          cpu.run();
       } catch (CpuException e) {
