@@ -132,12 +132,16 @@ public class CPU {
             System.out.println("pc new value: " + pc + "\n");
             return pc;
          case 8: // CIRC LEFT
-            result = (byte) Integer.rotateLeft(data1, data2);
-            sreg.updateSREG(data1, data2, result, '<');
+//          result = (byte) Integer.rotateLeft(data1, data2);
+//          sreg.updateSREG(data1, data2, result, '>');
+            result = (byte) Integer.rotateLeft((byte)(data1 & 0xFF),(byte) (data2 & 0xFF));
+            sreg.updateSREG(data1, (byte) (data2 & 0xFF), result, '<');
             break;
          case 9: // CIRC RIGHT
-            result = (byte) Integer.rotateRight(data1, data2);
-            sreg.updateSREG(data1, data2, result, '>');
+//            result = (byte) Integer.rotateRight(data1, data2);
+//            sreg.updateSREG(data1, data2, result, '>');
+            result = (byte) Integer.rotateRight((byte)(data1 & 0xFF),(byte) (data2 & 0xFF));
+            sreg.updateSREG(data1, (byte) (data2 & 0xFF), result, '<');
             break;
          case 10: // LOAD BYTE
             result = dataMemory[data2];
@@ -156,6 +160,8 @@ public class CPU {
 
       return -1;
    }
+
+
 
    private short concatenateByte(byte data1, byte data2) {
 
@@ -230,10 +236,20 @@ public class CPU {
       }
    }
 
+   public static void printBinary(byte value) {
+      for (int i = 7; i >= 0; i--) {
+         int bit = (value >> i) & 1;
+         System.out.print(bit);
+      }
+      System.out.println();
+   }
+
    public static void main(String[] args) {
       try {
          CPU cpu = new CPU();
-         cpu.instructionMemory.loadMemory("instructions.txt");
+         cpu.registerFile[1]=3;  //00000011   11110111   ->>> 0000   0001100 0001101
+         cpu.registerFile[2]=4;  //0000 0100  11111011   1111 1100  00111111
+         cpu.instructionMemory.loadMemory("CA/instructions.txt");
          cpu.run();
       } catch (CpuException e) {
          System.out.println(e.getMessage());
